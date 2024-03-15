@@ -68,7 +68,7 @@ jobs:
       #     docker scout cves
 
       - name: Docker Scout Scan
-        uses: docker/scout-action@latest # Using the latest version
+        uses: docker/scout-action@v1.5.1 # Using the latest version
         with:
           dockerhub-user: ${{ secrets.DOCKER_USER }}
           dockerhub-password: ${{ secrets.DOCKER_SECRET }}
