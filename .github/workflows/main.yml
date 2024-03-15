@@ -54,7 +54,7 @@ jobs:
       - name: Set up Docker
         uses: docker-practice/actions-setup-docker@v1
         with:
-          docker_version: "20.10.7"
+          docker_version: "24.0.3"
 
       - name: Build Docker Image
         run: docker build -f Dockerfile -t myapp:latest .
@@ -75,6 +75,7 @@ jobs:
           command: quickview,cves
           only-severities: critical,high
           sarif-file: scout-report.sarif
+          exit-code: true
         env:
           DOCKER_CONFIG: /home/runner/.docker # Ensure this path is correct
           DOCKER_CLI_EXPERIMENTAL: enabled
@@ -85,3 +86,25 @@ jobs:
         with:
           name: docker-scout-findings
           path: scout-report.sarif
+
+      # Trivy scan setup and execution
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-transport-https gnupg lsb-release
+          curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+
+      # Run Trivy vulnerability scan
+      - name: Run Trivy vulnerability scan
+        run: trivy image --format template --template "@contrib/sarif.tpl" -o trivy-report.sarif myapp:latest
+
+      # Upload Trivy Report
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: trivy-vulnerability-report
+          path: trivy-report.sarif
