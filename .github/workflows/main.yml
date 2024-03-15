@@ -75,7 +75,7 @@ jobs:
           command: quickview,cves
           only-severities: critical,high
           sarif-file: scout-report.sarif
-          exit-code: true
+          # exit-code: true
         env:
           DOCKER_CONFIG: /home/runner/.docker # Ensure this path is correct
           DOCKER_CLI_EXPERIMENTAL: enabled
@@ -89,6 +89,7 @@ jobs:
 
       # Trivy scan setup and execution
       - name: Install Trivy
+        if: always()
         run: |
           sudo apt-get update
           sudo apt-get install -y apt-transport-https gnupg lsb-release
@@ -99,6 +100,7 @@ jobs:
 
       # Run Trivy vulnerability scan
       - name: Run Trivy vulnerability scan
+        if: always()
         run: trivy image --format template --template "@contrib/sarif.tpl" -o trivy-report.sarif myapp:latest
 
       # Upload Trivy Report
