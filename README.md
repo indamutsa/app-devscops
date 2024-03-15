@@ -147,3 +147,9 @@ We are going to use `pygoat` project to demonstrate how to integrate security in
 ```bash
 git clone https://github.com/nanuchi/devsecops-crash-course-pygoat.git
 ```
+
+We will use `bandit` to scan the code for security vulnerabilities. Bandit is a tool designed to find common security issues in Python code. To install bandit, run the following command:
+
+```bash
+pip3 install bandit
+```
