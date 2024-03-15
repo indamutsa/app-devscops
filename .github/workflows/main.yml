@@ -68,13 +68,16 @@ jobs:
       #     docker scout cves
 
       - name: Docker Scout Scan
-        uses: docker/scout-action@v1.0.9
+        uses: docker/scout-action@latest # Using the latest version
         with:
           dockerhub-user: ${{ secrets.DOCKER_USER }}
           dockerhub-password: ${{ secrets.DOCKER_SECRET }}
           command: quickview,cves
           only-severities: critical,high
           sarif-file: scout-report.sarif
+        env:
+          DOCKER_CONFIG: /home/runner/.docker # Ensure this path is correct
+          DOCKER_CLI_EXPERIMENTAL: enabled
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
