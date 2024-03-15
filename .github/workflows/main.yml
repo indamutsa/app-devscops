@@ -24,13 +24,23 @@ jobs:
       - name: Run Bandit Scan
         run: bandit -ll -ii -r -f json -o bandit-report.json .
 
-      # Upload Bandit Report
-      - name: Upload Bandit Report
+      # Install Semgrep
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      # Run Semgrep Scan
+      - name: Run Semgrep Scan
+        run: semgrep --config=p/ci --json -o semgrep-report.json .
+
+      # Upload SAST Reports
+      - name: Upload SAST Reports
         uses: actions/upload-artifact@v2
-        if: always() # always upload the report, even if the previous steps failed
+        if: always()
         with:
-          name: bandit-report
-          path: bandit-report.json
+          name: sast-reports
+          path: |
+            bandit-report.json
+            semgrep-report.json
 
       # Add image scan
   image_scan:
