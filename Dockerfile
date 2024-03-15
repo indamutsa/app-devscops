@@ -24,10 +24,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # copy project
 COPY . /app/
 
-
 # install pygoat
 EXPOSE 8000
-
 
 RUN python3 /app/manage.py migrate
 WORKDIR /app/pygoat/
